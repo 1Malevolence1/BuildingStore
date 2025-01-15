@@ -1,0 +1,24 @@
+services:
+  database:
+    image: postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: buildingStore
+
+  product:
+    restart: unless-stopped
+    build:
+      context: ./src/main/resources
+      dockerfile: src/main/resources/Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/buildingStore
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: 123
+    ports:
+      - "8091:8091"
+    depends_on:
+      - database
